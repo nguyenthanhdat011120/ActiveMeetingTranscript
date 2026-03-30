@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0a0a0a",
+              "primary": "#84FF33",
+              "on-surface": "#ffffff",
+              "on-surface-variant": "#a1a1aa",
+              "surface-container": "#141414",
+              "surface-container-low": "#1a1a1a",
+              "surface-container-high": "#242424",
+              "surface-container-highest": "#2e2e2e",
+              "outline": "#3f3f46",
+              "outline-variant": "#27272a",
+              "primary-container": "rgba(132, 255, 51, 0.1)",
+              "on-primary-container": "#84FF33",
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk", "sans-serif"],
+              "body": ["Space Grotesk", "sans-serif"],
+              "label": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "9999px",
+              "lg": "9999px",
+              "xl": "9999px",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        -webkit-tap-highlight-color: transparent;
+        background-color: #0a0a0a;
+      }
+      .glow-border {
+        box-shadow: 0 0 20px rgba(132, 255, 51, 0.15);
+        border: 1px solid rgba(132, 255, 51, 0.3);
+      }
+      .neon-text {
+        text-shadow: 0 0 8px rgba(132, 255, 51, 0.5);
+      }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary/30">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-outline-variant/50 flex items-center justify-between px-6 h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full border border-primary/50 overflow-hidden">
+<img class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-300" data-alt="Professional portrait of a user" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACVdN6mHnosZfUksDbUpVwIyAfWG7a41QShGpRHuEsJXjq3Q1gAKf49GsdtGM5vsndtPiBXuzadHqUjFT_0n0D7UEg9y1VPptBsfVilgygMeI4aeZ_UPZHJ6RvPOu2gdzD1YgzWcNWTNny-Q-02EvHLFsTuq6fWweOSsv5cBaMZh7fdsnzwMRdi1GmMJ9_spTOurvrU5HJLf5WvhTlHjZd_usg4SaquC9IAMgApQ6Cuht6mrX4iKEMZBexHlXnsJ7LP2jYLC2Zxmg"/>
+</div>
+<span class="font-headline font-bold text-primary tracking-tight neon-text">MeetCurator</span>
+</div>
+<button class="text-on-surface hover:text-primary transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">search</span>
+</button>
+</header>
+<main class="pt-24 pb-32 px-6 max-w-md mx-auto space-y-8">
+<!-- Hero Section -->
+<header class="space-y-2">
+<span class="font-headline font-bold text-primary uppercase tracking-[0.3em] text-[10px]">Finished Session</span>
+<h1 class="font-headline font-bold text-3xl tracking-tight text-white leading-tight">Q4 Product Strategy &amp; Roadmap Sync</h1>
+<div class="flex items-center gap-2 text-on-surface-variant text-sm mt-1">
+<span class="material-symbols-outlined text-base">calendar_today</span>
+<span>Oct 24, 2023</span>
+<span class="mx-1 opacity-30">•</span>
+<span>45 mins</span>
+</div>
+</header>
+<!-- AI Summary Glass Panel -->
+<section class="relative bg-surface-container border border-outline-variant rounded-3xl p-6 shadow-2xl overflow-hidden group hover:border-primary/40 transition-colors">
+<div class="absolute top-0 right-0 p-3">
+<div class="bg-primary text-black text-[10px] font-black px-3 py-1 rounded-full flex items-center gap-1 shadow-[0_0_15px_rgba(132,255,51,0.4)]">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                AI INSIGHT
+            </div>
+</div>
+<h2 class="font-headline font-bold text-lg text-primary mb-3 neon-text">AI Summary</h2>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+            The team focused on streamlining the Q4 roadmap, specifically prioritizing the <span class="font-bold text-primary">Intelligence Layer</span> over minor UI tweaks. Alex raised concerns about the API latency, which was addressed by proposing a new caching layer. Key outcomes include shifting the beta launch to Nov 15th to ensure stability.
+        </p>
+</section>
+<!-- Main Topics -->
+<section class="space-y-4">
+<h3 class="font-headline font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-xl text-primary">label</span>
+            Main Topics
+        </h3>
+<div class="flex flex-wrap gap-2">
+<span class="bg-surface-container-high border border-outline-variant text-on-surface font-medium text-[11px] px-4 py-2 rounded-full active:bg-primary active:text-black transition-all">Roadmap 2024</span>
+<span class="bg-surface-container-high border border-outline-variant text-on-surface font-medium text-[11px] px-4 py-2 rounded-full active:bg-primary active:text-black transition-all">API Performance</span>
+<span class="bg-surface-container-high border border-outline-variant text-on-surface font-medium text-[11px] px-4 py-2 rounded-full active:bg-primary active:text-black transition-all">UI/UX Design</span>
+<span class="bg-surface-container-high border border-outline-variant text-on-surface font-medium text-[11px] px-4 py-2 rounded-full active:bg-primary active:text-black transition-all">Q4 Budget</span>
+<span class="bg-surface-container-high border border-outline-variant text-on-surface font-medium text-[11px] px-4 py-2 rounded-full active:bg-primary active:text-black transition-all">User Retention</span>
+</div>
+</section>
+<!-- Key Decisions -->
+<section class="space-y-4">
+<h3 class="font-headline font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-xl text-primary">gavel</span>
+            Key Decisions
+        </h3>
+<div class="grid grid-cols-1 gap-4">
+<div class="bg-surface-container-low p-5 rounded-3xl border border-outline-variant hover:glow-border transition-all space-y-2">
+<span class="text-primary font-black text-[10px] tracking-widest uppercase">Decision 01</span>
+<p class="font-medium text-white">Beta release date moved to November 15th for stability.</p>
+</div>
+<div class="bg-surface-container-low p-5 rounded-3xl border border-outline-variant hover:glow-border transition-all space-y-2">
+<span class="text-primary font-black text-[10px] tracking-widest uppercase">Decision 02</span>
+<p class="font-medium text-white">Allocated $15k additional budget for infrastructure scaling.</p>
+</div>
+</div>
+</section>
+<!-- Action Items -->
+<section class="space-y-4">
+<h3 class="font-headline font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-xl text-primary">checklist</span>
+            Action Items
+        </h3>
+<div class="bg-surface-container rounded-3xl p-2 space-y-1 border border-outline-variant">
+<label class="flex items-start gap-4 p-4 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer group">
+<input class="mt-1 w-5 h-5 rounded-full border-primary bg-transparent text-primary focus:ring-primary focus:ring-offset-surface" type="checkbox"/>
+<div class="flex-1">
+<p class="text-sm font-medium text-white leading-tight">Update Jira tickets for roadmap changes</p>
+<span class="text-[10px] text-primary/70 font-bold uppercase mt-1 block tracking-wider">Owner: Sarah M.</span>
+</div>
+</label>
+<label class="flex items-start gap-4 p-4 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer group">
+<input checked="" class="mt-1 w-5 h-5 rounded-full border-primary bg-primary text-black focus:ring-primary focus:ring-offset-surface" type="checkbox"/>
+<div class="flex-1">
+<p class="text-sm font-medium text-white/40 leading-tight line-through">Review API cache proposal with dev team</p>
+<span class="text-[10px] text-primary/30 font-bold uppercase mt-1 block tracking-wider">Owner: James K.</span>
+</div>
+</label>
+<label class="flex items-start gap-4 p-4 hover:bg-surface-container-high rounded-full transition-colors cursor-pointer group">
+<input class="mt-1 w-5 h-5 rounded-full border-primary bg-transparent text-primary focus:ring-primary focus:ring-offset-surface" type="checkbox"/>
+<div class="flex-1">
+<p class="text-sm font-medium text-white leading-tight">Send out follow-up survey to participants</p>
+<span class="text-[10px] text-primary/70 font-bold uppercase mt-1 block tracking-wider">Owner: Sarah M.</span>
+</div>
+</label>
+</div>
+</section>
+<!-- Contextual FAB -->
+<button class="fixed bottom-24 right-6 w-14 h-14 bg-primary text-black shadow-[0_0_20px_rgba(132,255,51,0.4)] rounded-full flex items-center justify-center hover:scale-105 active:scale-90 transition-all z-40">
+<span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">share</span>
+</button>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-t border-outline-variant/50 flex justify-around items-center h-20 px-4 pb-safe">
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest mt-1">Meetings</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">mic</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest mt-1">Record</span>
+</button>
+<button class="flex flex-col items-center justify-center text-primary bg-primary/10 rounded-full px-5 py-2 active:scale-90 duration-200 border border-primary/20">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<span class="font-label text-[10px] font-black uppercase tracking-widest mt-1">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-widest mt-1">Library</span>
+</button>
+</nav>
+</body></html>

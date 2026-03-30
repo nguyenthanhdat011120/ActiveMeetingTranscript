@@ -1,0 +1,130 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-outfit: "Outfit", sans-serif;
+  
+  --radius-xl: 24px;
+  
+  --color-primary-neon: #84FF33;
+  --color-primary-dark: #121212;
+  
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  --shadow-premium: 0 12px 40px rgba(0, 0, 0, 0.8);
+  --shadow-neon: 0 0 15px rgba(132, 255, 51, 0.4);
+
+  --animate-pulse-glow: pulse-glow 3s infinite ease-in-out;
+
+  @keyframes pulse-glow {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.05); }
+  }
+}
+
+@layer base {
+  :root {
+    /* Neon Vortex Dark Theme (Default) */
+    --background: oklch(0 0 0); /* Pure Black */
+    --foreground: oklch(0.98 0 0); /* Off White */
+    
+    --card: oklch(0.12 0 0); /* Deep Gray #121212 */
+    --card-foreground: oklch(0.98 0 0);
+    
+    --popover: oklch(0.12 0 0);
+    --popover-foreground: oklch(0.98 0 0);
+    
+    --primary: oklch(0.88 0.25 142); /* #84FF33 Neon Lime */
+    --primary-foreground: oklch(0.1 0 0);
+    
+    --secondary: oklch(0.2 0 0);
+    --secondary-foreground: oklch(0.98 0 0);
+    
+    --muted: oklch(0.2 0 0);
+    --muted-foreground: oklch(0.6 0 0);
+    
+    --accent: oklch(0.88 0.25 142 / 10%); /* Subtle Lime glow */
+    --accent-foreground: oklch(0.88 0.25 142);
+    
+    --destructive: oklch(0.5 0.2 25);
+    --destructive-foreground: oklch(0.98 0 0);
+    
+    --border: oklch(0.2 0 0);
+    --input: oklch(0.2 0 0);
+    --ring: oklch(0.88 0.25 142);
+    
+    --radius: 24px;
+  }
+
+  /* Light mode fallback (Inverted) */
+  .light {
+    --background: oklch(0.98 0 0);
+    --foreground: oklch(0.1 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.1 0 0);
+    --primary: oklch(0.8 0.2 142);
+    --primary-foreground: oklch(1 0 0);
+    --border: oklch(0.9 0 0);
+  }
+
+  * {
+    border-color: var(--border);
+  }
+  
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply font-sans antialiased;
+  }
+}
+
+@utility glass-card {
+  background-color: rgba(18, 18, 18, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-glass);
+}
+
+@utility bento-card {
+  border-radius: var(--radius-xl);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  &:hover {
+    transform: scale(1.01);
+    box-shadow: var(--shadow-premium);
+    border-color: var(--color-primary-neon);
+  }
+}
+
+@utility kinetic-gradient {
+  background-image: linear-gradient(to top right, var(--color-primary-neon), #CCFF33);
+  color: black;
+}
+
+@utility glow-neon {
+  box-shadow: 0 0 20px -5px rgba(132, 255, 51, 0.6);
+}
+
+@utility nav-blur {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  width: 100%;
+  border-bottom-width: 1px;
+  background-color: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(12px);
+}
+
+@theme inline {
+  --font-heading: var(--font-outfit);
+  --font-sans: var(--font-sans);
+  --color-primary: var(--primary);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --radius-lg: var(--radius);
+}

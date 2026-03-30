@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Profile {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  fullName    String?
+  avatarUrl   String?
+  plan        String   @default("FREE")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  meetings    Meeting[]
+
+  // Integration Settings
+  notionToken     String?
+  notionPageId    String?
+  slackWebhookUrl String?
+  slackBotToken   String?
+}
+
+model Meeting {
+  id          String   @id @default(uuid())
+  profileId   String
+  profile     Profile  @relation(fields: [profileId], references: [id])
+  title       String
+  date        DateTime @default(now())
+  duration    String?
+  type        String?  @default("Product")
+  status      String?  @default("Completed")
+  summary     String?  @db.Text
+  transcript  Json?
+  actionItems ActionItem[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model ActionItem {
+  id          String   @id @default(uuid())
+  meetingId   String
+  meeting     Meeting  @relation(fields: [meetingId], references: [id])
+  text        String
+  owner       String?
+  done        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

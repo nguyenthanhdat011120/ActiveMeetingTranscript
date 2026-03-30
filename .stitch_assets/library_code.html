@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0a0a0a",
+              "primary": "#84FF33",
+              "on-surface": "#ffffff",
+              "on-surface-variant": "#a3a3a3",
+              "surface-container": "#171717",
+              "surface-container-high": "#262626",
+              "surface-container-highest": "#333333",
+              "outline": "#404040",
+              "outline-variant": "#262626",
+              "secondary-container": "#1a2e0a",
+              "on-secondary-container": "#84FF33"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk", "sans-serif"],
+              "body": ["Space Grotesk", "sans-serif"],
+              "label": ["Space Grotesk", "sans-serif"]
+            },
+            borderRadius: {
+              "DEFAULT": "9999px",
+              "lg": "9999px",
+              "xl": "2rem",
+              "full": "9999px"
+            },
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            min-height: max(884px, 100dvh);
+            letter-spacing: -0.01em;
+        }
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(132, 255, 51, 0.2);
+        }
+        .glass-panel {
+            background: rgba(23, 23, 23, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary selection:text-black">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/5 flex items-center justify-between px-6 h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-primary/20 p-0.5">
+<img alt="User profile photo" class="rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7wv0JglCSF0129V9Udq1yKzbH8UMYXtvvEhimGrVAZxKg9cDCmU_RGmI9oaAEkXfLuYPFVmPiIiUcFohqJxsPxiAEr0JXG-JwU9vrRxwUcUVpXgcaBAoMn27ogNKn3mVUfaB544M9DYfxn0zhuTD7IHqb1QJmHkpLWr7GBK2Rybcey2LdFPkdiAO_O-GjNG8JJzw70z6TqUMXb5ktCsUJwS-jWgNkpQJmt_40Wpm5AGBc2Seb6Cy9b4bgziJ1zcivYdW-mH8r1cs"/>
+</div>
+<span class="font-headline font-bold text-on-surface tracking-tighter">MeetCurator</span>
+</div>
+<button class="active:scale-95 duration-200 text-primary">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-24 pb-32 px-6 min-h-screen">
+<!-- Header Section -->
+<header class="mb-8">
+<p class="font-headline text-primary font-bold text-xs tracking-[0.2em] uppercase mb-1">Archive</p>
+<h1 class="font-headline text-4xl font-bold text-on-surface tracking-tight leading-tight">Meeting Library</h1>
+</header>
+<!-- Search & Filter Area -->
+<div class="mb-8 space-y-4">
+<div class="relative group">
+<div class="absolute inset-y-0 left-4 flex items-center pointer-events-none text-primary/60">
+<span class="material-symbols-outlined text-lg">search</span>
+</div>
+<input class="w-full bg-surface-container border border-white/5 rounded-full py-4 pl-12 pr-4 text-on-surface focus:ring-1 focus:ring-primary focus:border-primary transition-all placeholder:text-outline" placeholder="Search transcripts or summaries..." type="text"/>
+</div>
+<div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-primary text-black font-bold text-sm shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+                    All Meetings
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container text-on-surface-variant font-medium text-sm border border-white/5 hover:bg-surface-container-high transition-colors active:scale-95">
+                    Product Sync
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container text-on-surface-variant font-medium text-sm border border-white/5 hover:bg-surface-container-high transition-colors active:scale-95">
+                    Client Calls
+                </button>
+<button class="whitespace-nowrap px-6 py-2 rounded-full bg-surface-container text-on-surface-variant font-medium text-sm border border-white/5 hover:bg-surface-container-high transition-colors active:scale-95">
+                    Brainstorming
+                </button>
+</div>
+</div>
+<!-- Meeting Grid -->
+<div class="grid grid-cols-1 gap-6">
+<!-- Featured/Recent Meeting -->
+<article class="bg-surface-container rounded-[2rem] p-6 border border-white/5 relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4">
+<span class="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary text-black text-[10px] font-bold uppercase tracking-widest neon-glow">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+                        AI Curated
+                    </span>
+</div>
+<div class="flex items-start justify-between mb-4">
+<div>
+<h3 class="font-headline text-xl font-bold text-on-surface mb-1 group-hover:text-primary transition-colors">Q3 Strategy Review</h3>
+<div class="flex items-center gap-3 text-on-surface-variant text-xs font-medium">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">calendar_today</span>
+                                Oct 12, 2023
+                            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                                45 min
+                            </span>
+</div>
+</div>
+</div>
+<p class="text-on-surface-variant text-sm leading-relaxed mb-6 line-clamp-2">
+                    Key alignment on product roadmap. Identified three major blockers in the API integration phase. Sarah to follow up with the infra team...
+                </p>
+<div class="flex items-center justify-between">
+<div class="flex -space-x-2">
+<img alt="Attendee" class="w-8 h-8 rounded-full border-2 border-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTjAyGnIJUhg4Ez2Z4WwXti5w4OfKQyvtaW6K_ZP47yFAnQb7j2jQQK-sGgVJ_kZ0jOrXyNyqhIhyBBDSGBCZlZkD4x-j1zIf6xImSRLcHNiDp4xyu0BWb1p9f5B_wosCgPVZULNzZM11tZhZN-rKdtqYZ8i6t8BLH_CYt42GPDGfv-kYXOm7rD1ZTz7kTmomvsKi_314_vZedUgZz6n_Y7azUjfasuLabVoRFxIc-xM6fIQJraQa-4WxMIbZtJ08U0-R9WMaj1Uo"/>
+<img alt="Attendee" class="w-8 h-8 rounded-full border-2 border-surface-container" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDKxC9jBwuc7WKnPnxj6UK_Rep4bDAg60ry2gU9VXwSOUFgWyG4qMS7kbBp4KlDLoXZn3cCeg573pZJ5MaZ6hDh7-gLUxvhhLBe7tt40rwZ5mdw8C7YpNFC-xQLFXb5_wLz7fwYFIXvq48L0U-XDMOidE5LXSI6hCe40df4qIdGFR14STtUTFW3dGczZCBt0z_mNdRTpG_12PQLRiS6R99qfywiM5tgvC-6l4BoMy6rOl7n1T2HKi3o-iKR48ENOJ0EfMpk754OOr8"/>
+<div class="w-8 h-8 rounded-full border-2 border-surface-container bg-surface-container-highest flex items-center justify-center text-[10px] font-bold text-primary">+3</div>
+</div>
+<button class="text-primary font-bold text-xs flex items-center gap-1 group/btn">
+                        View Insights
+                        <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</article>
+<!-- Regular Meetings -->
+<div class="grid grid-cols-1 gap-4">
+<article class="bg-surface-container rounded-3xl p-5 flex gap-4 border border-white/5 hover:border-primary/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary shrink-0 border border-primary/20">
+<span class="material-symbols-outlined">mic</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface">Weekly Design Sync</h3>
+<span class="text-[10px] font-bold text-primary uppercase tracking-wider">Yesterday</span>
+</div>
+<p class="text-on-surface-variant text-xs line-clamp-1 mb-2">Finalized the mobile navigation patterns and updated the library...</p>
+<div class="flex items-center gap-3 text-[10px] text-on-surface-variant/60 font-semibold">
+<span>12 min duration</span>
+<span class="w-1 h-1 rounded-full bg-primary/40"></span>
+<span>3 Action Items</span>
+</div>
+</div>
+</article>
+<article class="bg-surface-container rounded-3xl p-5 flex gap-4 border border-white/5 hover:border-primary/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-on-surface shrink-0 border border-white/10">
+<span class="material-symbols-outlined">psychology</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface">Ideation: Dark Mode</h3>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Oct 10</span>
+</div>
+<p class="text-on-surface-variant text-xs line-clamp-1 mb-2">Explored tonal depth versus absolute black for the OLED experience...</p>
+<div class="flex items-center gap-3 text-[10px] text-on-surface-variant/60 font-semibold">
+<span>28 min duration</span>
+<span class="w-1 h-1 rounded-full bg-primary/40"></span>
+<span>1 Decision</span>
+</div>
+</div>
+</article>
+<article class="bg-surface-container rounded-3xl p-5 flex gap-4 border border-white/5 hover:border-primary/20 transition-colors">
+<div class="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center text-on-surface shrink-0 border border-white/10">
+<span class="material-symbols-outlined">video_camera_front</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h3 class="font-headline font-bold text-on-surface">Client: Acme Corp</h3>
+<span class="text-[10px] font-bold text-on-surface-variant uppercase tracking-wider">Oct 08</span>
+</div>
+<p class="text-on-surface-variant text-xs line-clamp-1 mb-2">Initial kickoff for the new dashboard overhaul project. Timelines set...</p>
+<div class="flex items-center gap-3 text-[10px] text-on-surface-variant/60 font-semibold">
+<span>52 min duration</span>
+<span class="w-1 h-1 rounded-full bg-primary/40"></span>
+<span class="text-primary">AI Summary Ready</span>
+</div>
+</div>
+</article>
+</div>
+</div>
+<!-- Empty State Visual Cue -->
+<div class="mt-12 py-12 text-center">
+<div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-surface-container-high border border-white/5 mb-4">
+<span class="material-symbols-outlined text-primary/40 text-3xl">folder_zip</span>
+</div>
+<p class="font-headline text-lg font-bold text-on-surface/40 tracking-tight">End of recent history</p>
+<p class="text-on-surface-variant/40 text-xs mt-2 uppercase tracking-widest font-bold">Archive contains 142 additional recordings</p>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-[2.5rem] bg-surface-container/80 backdrop-blur-xl border-t border-white/5 flex justify-around items-center h-20 px-4 pb-safe">
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">dashboard</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider">Meetings</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">mic</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider">Record</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant/60 hover:text-primary transition-colors active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-1">auto_awesome</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider">Insights</span>
+</button>
+<button class="flex flex-col items-center justify-center text-black bg-primary rounded-full px-5 py-2 shadow-lg shadow-primary/20 active:scale-90 duration-200">
+<span class="material-symbols-outlined mb-0.5 text-xl">folder_open</span>
+<span class="font-label text-[10px] font-bold uppercase tracking-wider">Library</span>
+</button>
+</nav>
+</body></html>
