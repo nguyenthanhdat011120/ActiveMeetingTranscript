@@ -1,76 +1,139 @@
-# WorkFlowLoop
+# 🔄 WorkFlowLoop - Active Meeting Transcript
 
-> "Biến mọi cuộc họp nội bộ thành kết quả công việc, không để lọt quyết định."
+> **"Biến mọi cuộc họp nội bộ thành kết quả công việc, không để lọt quyết định."**
 
-**WorkFlowLoop** là một hệ thống (Meeting-to-Execution) dành cho các Remote Team, tập trung vào việc biến audio cuộc họp thành Action Items có người phụ trách, thời hạn và đồng bộ sang Slack, Notion, Jira.
-
----
-
-## 🚀 Project Documentation
-
-Toàn bộ tài liệu chi tiết của dự án được lưu trữ trong thư mục `/docs`:
-
-- **[Project Overview - PDR](file:///d:/WorkFlowLoop/docs/project-overview-pdr.md)**: Tổng quan sản phẩm, giá trị lõi, bài toán giải quyết và phạm vi MVP.
-- **[System Architecture](file:///d:/WorkFlowLoop/docs/system-architecture.md)**: Chi tiết cơ sở dữ liệu (Database Schema), API Endpoints và Tech Stack khuyên dùng.
-- **[Project Roadmap](file:///d:/WorkFlowLoop/docs/project-roadmap.md)**: Lộ trình phát triển qua từng Phase và Checklist công việc theo tuần cho MVP.
-- **[Design Guidelines](file:///d:/WorkFlowLoop/docs/design-guidelines.md)**: Mô tả chi tiết các màn hình quan trọng (MVP Screens) và phong cách UI/UX.
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.4-38B2AC?style=flat-square&logo=tailwind-css)](https://tailwindcss.com/)
+[![Supabase](https://img.shields.io/badge/Supabase-Auth/DB-3ECF8E?style=flat-square&logo=supabase)](https://supabase.com/)
+[![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=flat-square&logo=prisma)](https://www.prisma.io/)
 
 ---
 
-## 🛠️ Stack Khuyên Dùng (MVP)
+## 🌟 Giới thiệu (Product Concept)
 
-- **Frontend**: Next.js (App Router), Tailwind CSS, Lucide, Shadcn UI.
-- **Backend/DB**: Node.js/TypeScript, Prisma, Postgres.
-- **AI/STT**: OpenAI Whisper, Claude 3.5 Sonnet / GPT-4o.
-- **Auth**: Clerk / Supabase.
-- **Automation**: n8n, Webhooks.
+**WorkFlowLoop** không chỉ là một công cụ ghi âm hay tóm tắt cuộc họp thông thường (AI Note-taker). Đây là một hệ thống **Meeting-to-Execution** toàn diện dành cho các Remote Teams, giúp thu hẹp khoảng cách giữa thảo luận và hành động. 
 
----
+Hệ thống tự động chuyển đổi audio cuộc họp thành các **Action Items** có người phụ trách (Owner), thời hạn (Deadline) và đồng bộ hóa trực tiếp với các công cụ quản lý công việc như Slack, Notion, Jira.
 
-## 📅 Roadmap Tóm Tắt (7 Weeks)
-
-1. **Week 1**: Validate & Research (Phase 0).
-2. **Week 2**: MVP Design & Setup (Phase 1).
-3. **Week 3**: Capture & Transcribe (Phase 2).
-4. **Week 4**: Smart Extraction & AI Review (Phase 3).
-5. **Week 5**: Automation & Integrations (Phase 4).
-6. **Week 6**: Pilot Testing & Feedback (Phase 5).
-7. **Week 7**: Monetization & Launch (Phase 6).
+### 💡 Giá trị cốt lõi
+- **Tránh thất thoát quyết định**: Mọi cam kết trong họp đều được AI "bắt" lại chính xác.
+- **Tăng tính trách nhiệm**: Tự động nhận diện Owner và Deadline cho từng đầu việc.
+- **Tiết kiệm thời gian**: Giảm thời gian viết Recap từ 30 phút xuống còn dưới 2 phút.
+- **Minh bạch**: Một nguồn sự thật duy nhất cho mọi quyết định sau họp.
 
 ---
 
-## 📂 Project Structure
+## ✨ Tính năng chính (MVP Scope)
 
+1.  🎙️ **Meeting Capture & Transcription**: Ghi âm chất lượng cao và chuyển đổi văn bản (Speech-to-Text) theo thời gian thực.
+2.  🤖 **AI-Driven Summary**: Tóm tắt thông minh, phân loại Nội dung chính, Quyết định quan trọng và các Rào cản (Blockers).
+3.  ⚡ **Action Item Extraction**: Tự động trích xuất đầu việc từ transcript dựa trên ngữ cảnh cam kết (Ví dụ: "I'll handle this by Friday").
+4.  🖥️ **Review & Delegate UI**: Giao diện trực quan để người dùng kiểm duyệt, chỉnh sửa Owner/Deadline trước khi phát hành.
+5.  🔌 **Multi-Tool Integration**: Đồng bộ hóa 1-click sang các nền tảng làm việc phổ biến (Notion, Slack, ClickUp, Jira).
+
+---
+
+## 🛠️ Công nghệ sử dụng (Tech Stack)
+
+### Frontend & UI
+- **Framework**: Next.js 15 (App Router)
+- **Styling**: Tailwind CSS & Framer Motion (Animations)
+- **Components**: Shadcn UI & Lucide Icons
+- **Design System**: Digital Curator (Stitch Custom Tokens)
+
+### Backend & Data
+- **Language**: TypeScript
+- **Database**: PostgreSQL (Managed by Supabase)
+- **ORM**: Prisma
+- **Auth**: Supabase Auth (Google/GitHub)
+
+### AI & Pipeline
+- **STT**: OpenAI Whisper / Groq Whisper
+- **LLM**: Claude 3.5 Sonnet / Llama 3.3 (Transcribe & Synthesis)
+- **Automation**: n8n / Custom Webhooks
+
+---
+
+## 🚀 Bắt đầu dự án (Local Setup)
+
+### 1. Yêu cầu hệ thống
+- Node.js 18+ 
+- npm / yarn / pnpm
+
+### 2. Cài đặt Dependencies
 ```bash
-/docs
-  ├── project-overview-pdr.md    # Product Strategy & POV
-  ├── system-architecture.md     # DB Schema, API & Stack
-  ├── project-roadmap.md         # Weekly Checklist & Phases
-  ├── design-guidelines.md       # MVP Screens & UI Style
-README.md                        # Project Entry Point
-plan.md                          # Original Plan
-phrase.md                        # Original Phases
-remote_team_meeting_plan.csv      
+git clone https://github.com/nguyenthanhdat011120/ActiveMeetingTranscript.git
+cd ActiveMeetingTranscript
+npm install
 ```
 
-## 🛠 Database & Authentication (Supabase)
+### 3. Cấu hình Biến môi trường
+Tạo file `.env.local` từ mẫu sau:
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+DATABASE_URL=your_prisma_db_url
+DIRECT_URL=your_prisma_direct_url
+OPENAI_API_KEY=your_openai_key
+CLAUDE_API_KEY=your_anthropic_key
+```
 
-WorkFlowLoop uses **Supabase** (Postgres + Auth) for secure data persistence.
-
-### 1. Provision Sub-space (Supabase)
-- Create a project on [Supabase.com](https://supabase.com).
-- Copy `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to `.env.local`.
-
-### 2. Configure Prisma connection
-- Copy the Connection String from Project Settings > Database.
-- Add `DATABASE_URL` and `DIRECT_URL` (for migrations) to `.env.local`.
-
-### 3. Initialize Schema
+### 4. Khởi tạo Database
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-### 4. Enable Google/Github Auth
-- Go to Authentication > Providers and enable your preferred login protocol.
-- Set the redirect URL to: `https://your-domain.ai/auth/callback`
+### 5. Chạy môi trường Dev
+```bash
+npm run dev
+```
+Mở [http://localhost:3000](http://localhost:3000) để xem kết quả.
+
+---
+
+## 📂 Cấu trúc thư mục (Project Structure)
+
+```bash
+/app              # Next.js App Router (Routes & Pages)
+  ├── (dashboard) # Các trang chức năng chính (Record, Meetings, Insights)
+  ├── api         # API Endpoints (Integration, Synthesis, Audio)
+  └── auth        # Auth logic & Callbacks
+/components       # UI Components (Reusable)
+/docs             # Tài liệu chi tiết dự án (PDR, Arch, Roadmap)
+/hooks            # Custom React Hooks
+/lib              # Shared Utilities (Prisma, Supabase, AI Logic)
+/prisma           # Database Schema
+/public           # Static Assets (Images, Icons)
+```
+
+---
+
+## 📅 Lộ trình phát triển (Roadmap)
+
+- [x] **Phase 1**: Thiết kế UI/UX & Setup Infrastructure.
+- [x] **Phase 2**: Thực hiện cơ chế Capture Audio & Real-time Transcription.
+- [ ] **Phase 3**: AI Synthesis Engine - Tóm tắt & Trích xuất Action Items.
+- [ ] **Phase 4**: Tích hợp One-click Sync (Notion, Slack).
+- [ ] **Phase 5**: Pilot Testing & Feedback xử lý nhiễu âm thanh.
+
+---
+
+## 📄 Tài liệu tham khảo
+
+Để biết thêm chi tiết, vui lòng xem trong thư mục `/docs`:
+- [Project Overview - PDR](./docs/project-overview-pdr.md)
+- [System Architecture](./docs/system-architecture.md)
+- [Project Roadmap](./docs/project-roadmap.md)
+- [Design Guidelines](./docs/design-guidelines.md)
+
+---
+
+## 🤝 Đóng góp
+
+Mọi đóng góp (Issue, Pull Request) đều được trân trọng. Vui lòng thảo luận trước qua Issue khi có các thay đổi lớn về kiến trúc.
+
+---
+
+**© 2026 WorkFlowLoop by [Nguyen Thanh Dat](https://github.com/nguyenthanhdat011120)**

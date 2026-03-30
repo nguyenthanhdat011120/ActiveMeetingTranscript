@@ -79,7 +79,7 @@ export default function LandingPage() {
           </div>
           
           <div className="flex gap-8 text-sm font-semibold">
-              <span className="text-muted-foreground">© 2026 WorkFlowLoop</span>
+              <span className="text-muted-foreground">© 2026 ACTIVE MEETING TRANSCRIPT</span>
               <a href="#" className="hover:underline">Privacy</a>
               <a href="#" className="hover:underline">Terms</a>
               <a href="#" className="hover:underline">Status</a>

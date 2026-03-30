@@ -1,9 +1,10 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Search, Clock, Sparkles, Bookmark, StopCircle, Play, Pause, ChevronLeft, Volume2, Shield, Settings2, MoreHorizontal, User, Share2, Save, Trash2 } from "lucide-react";
+import { Mic, Search, Clock, Sparkles, Bookmark, StopCircle, Play, Pause, ChevronLeft, Volume2, Shield, Settings2, MoreHorizontal, User, Share2, Save, Trash2, MonitorSpeaker } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { LoadingState } from "@/components/shared/loading-state";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -12,19 +13,10 @@ const initialTranscript: { id: number; initials?: string; name: string; time: st
     { id: 2, initials: "SC", name: "Sarah Chen", time: "00:45", text: "I've sent the Figma links over. We should prioritize the mobile-responsive views first to ensure consistency across devices.", isAI: false },
 ];
 
-const highlightsPool = [
-   "API integration estimated completion: Friday",
-   "Priority: Mobile-responsive views",
-   "Next Sync: Tomorrow, 9:00 AM",
-   "Database indexing strategy reviewed",
-   "Latency reduced to 200ms target"
-];
-
 const mockTranscriptStream = [
     { id: 4, initials: "AK", name: "Alex Kumar", time: "01:12", text: "Agreed. I'll start mapping the API endpoints to the new design specs by tonight.", isAI: false },
     { id: 5, initials: "JD", name: "Jordan Doe", time: "01:25", text: "Perfect. Let's touch base tomorrow morning at 9 AM for a quick sync.", isAI: false },
     { id: 6, initials: "SC", name: "Sarah Chen", time: "01:45", text: "Wait, do we have the final specs for the search component? That's critical for the library view.", isAI: false },
-    { id: 7, name: "AI Curator", time: "Synthesis Ready", text: "Sarah requested final specifications for the Search Component. Alex to provide mapping by tonight.", isAI: true },
 ];
 
 export default function ActiveMeeting() {
@@ -38,7 +30,9 @@ export default function ActiveMeeting() {
   const [isSaving, setIsSaving] = useState(false);
   
   // Audio state
+  const [isSystemAudio, setIsSystemAudio] = useState(false);
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const lastChunkIndexRef = useRef(0);
   const intervalRef = useRef<any>(null);
@@ -65,15 +59,39 @@ export default function ActiveMeeting() {
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const recorder = new MediaRecorder(stream);
+      let finalStream: MediaStream;
+
+      if (isSystemAudio) {
+        // Meeting Integration: Mix Mic + System/Tab Audio (Google Meet)
+        const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+           audio: { echoCancellation: true, noiseSuppression: true },
+           video: true // Browser requires video for getDisplayMedia, but we'll only use audio
+        });
+
+        const audioCtx = new AudioContext();
+        audioContextRef.current = audioCtx;
+        const dest = audioCtx.createMediaStreamDestination();
+
+        const micSource = audioCtx.createMediaStreamSource(micStream);
+        const screenSource = audioCtx.createMediaStreamSource(screenStream);
+
+        micSource.connect(dest);
+        screenSource.connect(dest);
+
+        finalStream = dest.stream;
+      } else {
+        // Solo Mode: Just Microphone
+        finalStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      }
+
+      const recorder = new MediaRecorder(finalStream);
       mediaRecorderRef.current = recorder;
       audioChunksRef.current = [];
 
       recorder.ondataavailable = (e) => {
         if (e.data.size > 0) {
           audioChunksRef.current.push(e.data);
-          // Auto-transcribe chunk if it's substantial
           if (audioChunksRef.current.length % 5 === 0) {
              transcribeCurrentChunks();
           }
@@ -81,7 +99,7 @@ export default function ActiveMeeting() {
       };
 
       recorder.start(1000); // 1-second chunks
-      console.log('Recording started');
+      console.log('Recording started', isSystemAudio ? '(Meeting Mode)' : '(Solo Mode)');
     } catch (err) {
       console.error('Failed to start recording', err);
       setIsRecording(false);
@@ -92,7 +110,10 @@ export default function ActiveMeeting() {
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
-      transcribeCurrentChunks(true); // Final transcription
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      transcribeCurrentChunks(true); 
     }
   };
 
@@ -142,38 +163,56 @@ export default function ActiveMeeting() {
 
   const handleSave = async () => {
      setIsSaving(true);
+     
+     // 1. Prepare raw transcript from recorded chunks
+     const combinedTranscript = transcript.map(t => `${t.name}: ${t.text}`).join('\n');
+     
      const sessionData = {
         title: meetingTitle || "Untitled Session",
-        transcript: { data: transcript.map(t => `${t.name}: ${t.text}`).join('\n') },
-        summary: highlights.join(" | "),
+        transcript: { data: combinedTranscript },
         duration: formatTime(timer),
-        actionItems: highlights.map(h => ({ text: h, done: false }))
      };
 
      try {
+        // Step 1: Save the meeting to DB
         const res = await fetch('/api/meetings', {
            method: 'POST',
            headers: { 'Content-Type': 'application/json' },
            body: JSON.stringify(sessionData)
         });
         
-        if (res.ok) {
-           router.push('/meetings');
+        const newMeeting = await res.json();
+        
+        if (res.ok && newMeeting.id) {
+           // Step 2: Trigger AI Deep-Scan (Diarization + Summary + Action Items)
+           // We'll let the user see it real-time in the insights page
+           fetch(`/api/meetings/${newMeeting.id}/analyze`, { method: 'POST' });
+           
+           // Redirect to the new insights page
+           router.push(`/insights/${newMeeting.id}`);
         } else {
            console.error('Failed to save session');
+           alert("Lưu thất bại. Vui lòng thử lại.");
         }
      } catch (err) {
         console.error('Save error:', err);
+        alert("Lỗi hệ thống khi lưu cuộc họp.");
      } finally {
         setIsSaving(false);
      }
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full">
+    <>
+      <AnimatePresence>
+        {isSaving && (
+          <LoadingState type="fullscreen" message="Optimizing Meeting Intelligence" />
+        )}
+      </AnimatePresence>
 
-      {/* Main Recording & Transcript Area (Left/Center) */}
-      <section className="lg:col-span-12 xl:col-span-8 space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 h-full relative">
+        {/* Main Recording & Transcript Area (Left/Center) */}
+        <section className="lg:col-span-12 xl:col-span-8 space-y-8">
         
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-white/5">
@@ -368,9 +407,21 @@ export default function ActiveMeeting() {
       {/* Control HUD (Compact Center) */}
       <div className="fixed bottom-10 left-0 right-0 md:left-auto md:right-auto md:left-1/2 md:-translate-x-1/2 z-50 flex justify-center px-4 pointer-events-none">
          <div className="pointer-events-auto bg-background/80 backdrop-blur-2xl border border-white/10 rounded-full px-8 py-4 flex items-center gap-8 shadow-2xl">
-            <button className="text-white/20 hover:text-white transition-colors">
-               <MoreHorizontal size={20} />
+            {/* System Audio Toggle */}
+            <button 
+               onClick={() => setIsSystemAudio(!isSystemAudio)}
+               disabled={isRecording}
+               className={cn(
+                  "p-3 rounded-full transition-all flex items-center gap-2",
+                  isSystemAudio 
+                    ? "bg-primary text-black shadow-neon" 
+                    : "text-white/20 hover:text-white/40"
+               )}
+               title={isSystemAudio ? "Meeting Mode (Mic + System)" : "Solo Mode (Mic Only)"}
+            >
+               <MonitorSpeaker size={20} className={isSystemAudio ? "animate-pulse" : ""} />
             </button>
+
             <div className="flex items-center gap-4">
                {!isFinished ? (
                  <>
@@ -400,17 +451,14 @@ export default function ActiveMeeting() {
                   </div>
                )}
             </div>
-            <button 
-              onClick={() => {
-                const h = highlightsPool[Math.floor(Math.random()*highlightsPool.length)];
-                setHighlights(prev => [...prev, h]);
-              }}
-              className="text-primary/40 hover:text-primary transition-all hover:scale-125">
-               <Bookmark size={20} className="fill-current" />
-            </button>
+            <div className="flex items-center gap-1.5 antialiased px-6">
+               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+               <span className="text-[10px] font-black text-primary uppercase tracking-[0.2em]">Signal: Verified</span>
+            </div>
          </div>
       </div>
 
     </div>
+    </>
   );
 }

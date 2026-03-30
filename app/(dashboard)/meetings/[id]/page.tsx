@@ -29,6 +29,9 @@ export default function MeetingDetailPage({ params }: { params: Promise<{ id: st
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState("");
+  const [chatMessages, setChatMessages] = useState<{ role: 'user' | 'assistant', content: string }[]>([]);
+  const [userInput, setUserInput] = useState("");
+  const [isChatLoading, setIsChatLoading] = useState(false);
 
   useEffect(() => {
     const fetchMeeting = async () => {
@@ -78,6 +81,36 @@ export default function MeetingDetailPage({ params }: { params: Promise<{ id: st
       console.error('Error analyzing meeting:', error);
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const handleSendMessage = async () => {
+    if (!userInput.trim() || isChatLoading) return;
+    
+    const userMsg = userInput;
+    const currentMessages = [...chatMessages, { role: 'user', content: userMsg }];
+    
+    setUserInput("");
+    setChatMessages(currentMessages as any);
+    setIsChatLoading(true);
+
+    try {
+      const res = await fetch(`/api/meetings/${id}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          message: userMsg,
+          history: chatMessages 
+        })
+      });
+      const data = await res.json();
+      if (data.content) {
+        setChatMessages([...currentMessages, { role: 'assistant', content: data.content }] as any);
+      }
+    } catch (error) {
+      console.error('Chat error:', error);
+    } finally {
+      setIsChatLoading(false);
     }
   };
 
@@ -165,10 +198,22 @@ ${transcriptData}
 
   if (!meeting) return null;
 
-  // Formatting transcript JSON
-  const transcriptData = meeting.transcript && typeof meeting.transcript === 'object' && 'data' in meeting.transcript 
-    ? (meeting.transcript as any).data 
-    : "";
+  // Robust formatting for transcript data (handles legacy strings and new JSON wrapper)
+  const getTranscriptText = () => {
+    if (!meeting?.transcript) return "";
+    
+    // If it's a string, return it
+    if (typeof meeting.transcript === 'string') return meeting.transcript;
+    
+    // If it's the new format { data: "..." }
+    if (typeof meeting.transcript === 'object' && 'data' in meeting.transcript) {
+       return (meeting.transcript as any).data || "";
+    }
+    
+    return "";
+  };
+
+  const transcriptData = getTranscriptText();
 
   return (
     <div className="space-y-10">
@@ -381,10 +426,84 @@ ${transcriptData}
               </div>
            </motion.div>
 
-           <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 flex flex-col items-center justify-center text-center gap-4 group cursor-pointer hover:bg-primary/10 transition-all">
+           <div className="p-8 bg-primary/5 rounded-[2.5rem] border border-primary/10 flex flex-col items-center justify-center text-center gap-4 group cursor-pointer hover:bg-primary/10 transition-all opacity-40 hover:opacity-100">
               <Bookmark className="text-primary w-6 h-6 group-hover:scale-110 transition-transform" />
               <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Save to Curated Collection</p>
            </div>
+
+           {/* AI Chat Insight - New Feature */}
+           <motion.div 
+             initial={{ opacity: 0, y: 20 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ delay: 0.4 }}
+             className="bg-black/40 border border-white/10 rounded-[3rem] overflow-hidden flex flex-col shadow-2xl h-[500px]"
+           >
+              <div className="p-6 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                       <Sparkles size={16} className="text-black fill-current" />
+                    </div>
+                    <span className="text-white font-outfit font-bold text-xs">AI Chat Insights</span>
+                 </div>
+                 <div className="flex items-center gap-1.5 antialiased">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    <span className="text-[9px] font-bold text-green-500 uppercase tracking-widest">Active</span>
+                 </div>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar">
+                 {chatMessages.length === 0 ? (
+                    <div className="h-full flex flex-col items-center justify-center text-center p-6 space-y-4">
+                       <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center text-primary/20">
+                          <Brain size={24} />
+                       </div>
+                       <p className="text-[11px] font-medium text-muted-foreground/40 leading-relaxed uppercase tracking-widest">
+                          Ask anything about this meeting archive. AI will scan your transcript to answer.
+                       </p>
+                    </div>
+                 ) : (
+                    chatMessages.map((msg, i) => (
+                       <div key={i} className={cn(
+                          "flex flex-col gap-1.5 max-w-[90%]",
+                          msg.role === 'user' ? "ml-auto items-end" : "items-start"
+                       )}>
+                          <div className={cn(
+                             "p-4 rounded-[1.5rem] text-sm leading-relaxed antialiased",
+                             msg.role === 'user' ? "bg-primary text-black font-bold rounded-tr-none" : "bg-white/5 border border-white/10 text-white/90 rounded-tl-none"
+                          )}>
+                             {msg.content}
+                          </div>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground/30 px-2">{msg.role}</span>
+                       </div>
+                    ))
+                 )}
+                 {isChatLoading && (
+                    <div className="flex items-center gap-3 text-primary/40 text-[9px] font-black uppercase tracking-widest animate-pulse pl-2">
+                       <Sparkles size={12} className="animate-spin-slow" />
+                       Analyzing Intelligence...
+                    </div>
+                 )}
+              </div>
+
+              <div className="p-4 bg-white/5 border-t border-white/5">
+                 <div className="relative group">
+                    <input 
+                       className="w-full bg-black border border-white/10 rounded-2xl py-4 pl-5 pr-12 text-xs text-white focus:outline-none focus:border-primary/50 transition-all placeholder:text-muted-foreground/20"
+                       placeholder="Scan session for answers..."
+                       value={userInput}
+                       onChange={(e) => setUserInput(e.target.value)}
+                       onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
+                    />
+                    <button 
+                       onClick={handleSendMessage}
+                       disabled={isChatLoading || !userInput.trim()}
+                       className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-black hover:scale-105 active:scale-95 transition-all disabled:opacity-30"
+                    >
+                       <ArrowLeft size={16} className="rotate-180" />
+                    </button>
+                 </div>
+              </div>
+           </motion.div>
         </aside>
 
       </div>

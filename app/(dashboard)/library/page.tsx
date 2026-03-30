@@ -11,6 +11,7 @@ const filters = ["All", "Product", "Client", "Design", "Brainstorm"];
 export default function MeetingLibrary() {
   const [meetings, setMeetings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
   const [activeFilter, setActiveFilter] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -30,6 +31,83 @@ export default function MeetingLibrary() {
     };
     fetchMeetings();
   }, []);
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("File Upload Triggered");
+    const file = event.target.files?.[0];
+    if (!file) {
+      console.log("No file selected");
+      return;
+    }
+
+    console.log("Processing file:", file.name, file.size);
+    setIsUploading(true);
+    
+    try {
+      console.log("Commencing Intelligent Decomposition for:", file.name);
+      
+      const CHUNK_SIZE = 24 * 1024 * 1024; // Safeguard 24MB
+      const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
+      let fullTranscript = "";
+
+      for (let i = 0; i < totalChunks; i++) {
+        const start = i * CHUNK_SIZE;
+        const end = Math.min(start + CHUNK_SIZE, file.size);
+        const chunkBlob = file.slice(start, end, file.type);
+        
+        console.log(`Step 1: Processing Fragment ${i+1}/${totalChunks}...`);
+        const formData = new FormData();
+        // Use a generic name with a valid extension (VERY IMPORTANT for Whisper)
+        formData.append('file', chunkBlob, `fragment_${i}.wav`);
+
+        const transcriptionRes = await fetch('/api/transcribe', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        const transcriptionData = await transcriptionRes.json();
+        if (!transcriptionRes.ok) throw new Error(transcriptionData.detail || `Fragment ${i} failed`);
+        
+        if (transcriptionData.text) {
+           fullTranscript += transcriptionData.text + " ";
+        }
+      }
+
+      if (fullTranscript) {
+        console.log("Step 2: Syncing Combined Intelligence to Vault...");
+        const sessionData = {
+          title: `Import: ${file.name.split('.')[0]}`,
+          transcript: { data: fullTranscript },
+          duration: "Silent Digest",
+        };
+
+        const saveRes = await fetch('/api/meetings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(sessionData),
+        });
+        
+        const newMeeting = await saveRes.json();
+        
+        if (newMeeting.id) {
+           console.log("Step 3: Triggering AI Deep-Scan...");
+           await fetch(`/api/meetings/${newMeeting.id}/analyze`, { method: 'POST' });
+        }
+
+        console.log("Vault Synchronization Complete.");
+        const res = await fetch('/api/meetings');
+        const data = await res.json();
+        setMeetings(data);
+        alert("Archive imported and analyzed successfully!");
+      }
+    } catch (error) {
+      console.error('Pipeline error:', error);
+      alert("Failed to import archive. File may be corrupted or API limit reached.");
+    } finally {
+      setIsUploading(false);
+      if (event.target) event.target.value = "";
+    }
+  };
 
   const filteredMeetings = useMemo(() => {
     return meetings.filter((meeting) => {
@@ -95,8 +173,39 @@ export default function MeetingLibrary() {
       </div>
 
       {/* Meeting Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-6 pb-20">
          
+         {/* Upload Card */}
+         <div className="lg:col-span-4 h-full">
+            <div className={cn(
+               "h-full min-h-[140px] rounded-[3rem] border-2 border-dashed border-white/5 bg-white/5 relative group hover:bg-primary/5 hover:border-primary/20 transition-all overflow-hidden",
+               isUploading && "pointer-events-none opacity-50"
+            )}>
+               <input 
+                  id="archive-upload"
+                  type="file" 
+                  accept="audio/*,video/*" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" 
+                  onChange={handleFileUpload}
+                  disabled={isUploading}
+               />
+               
+               <div className="flex flex-col items-center justify-center p-8 text-center space-y-4 h-full">
+                  <div className="w-16 h-16 rounded-[2rem] bg-white/5 border border-white/10 flex items-center justify-center mx-auto text-primary group-hover:scale-110 group-hover:shadow-neon transition-all">
+                     {isUploading ? (
+                        <div className="w-6 h-6 border-2 border-primary/20 border-t-primary rounded-full animate-spin" />
+                     ) : (
+                        <ArrowUpRight size={28} className="rotate-[-45deg]" />
+                     )}
+                  </div>
+                  <div className="space-y-1">
+                     <p className="text-[11px] font-black text-white uppercase tracking-widest">{isUploading ? "Decrypting Intelligence..." : "Import New Archive"}</p>
+                     <p className="text-[9px] font-medium text-muted-foreground/40 uppercase tracking-tighter">MP4, MP3, WAV, WebM Supported</p>
+                  </div>
+               </div>
+            </div>
+         </div>
+
          <AnimatePresence mode="popLayout">
             {isLoading ? (
                <div className="lg:col-span-12 py-32 text-center animate-pulse">

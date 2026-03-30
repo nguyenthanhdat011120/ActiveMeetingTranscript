@@ -24,8 +24,8 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "WorkFlowLoop | Meeting to Action Platform",
-  description: "Automate your meeting transcription, insight extraction, and team delegation with a premium kinetic workflow.",
+  title: "ACTIVE MEETING TRANSCRIPT | Meeting Intelligence Platform",
+  description: "Automate your meeting transcription, insight extraction, and team synchronization with a premium AI workflow.",
 };
 
 export default function RootLayout({

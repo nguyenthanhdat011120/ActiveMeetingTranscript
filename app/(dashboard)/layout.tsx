@@ -1,7 +1,7 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, Mic, BarChart3, Library, Search, LogOut, Settings, User } from "lucide-react";
+import { LayoutDashboard, Mic, BarChart3, Library, Search, LogOut, Settings, User, Scissors } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
@@ -13,6 +13,7 @@ const navItems = [
   { label: "Record", icon: Mic, href: "/record" },
   { label: "Insights", icon: BarChart3, href: "/insights" },
   { label: "Library", icon: Library, href: "/library" },
+  { label: "Tools", icon: Scissors, href: "/tools/slicer" },
 ];
 
 import { useRouter } from "next/navigation";
@@ -88,7 +89,7 @@ export default function DashboardLayout({
         </nav>
 
         <div className="p-4 border-t border-white/5 space-y-2">
-           <Link href="#" className="flex items-center px-4 py-3 rounded-2xl text-muted-foreground hover:bg-white/5 hover:text-white transition-all group">
+           <Link href="/settings" className="flex items-center px-4 py-3 rounded-2xl text-muted-foreground hover:bg-white/5 hover:text-white transition-all group">
              <Settings className="w-5 h-5 shrink-0" />
              <span className="hidden lg:block font-bold text-sm ml-4">Settings</span>
            </Link>
@@ -145,7 +146,7 @@ export default function DashboardLayout({
 
         {/* Content Area */}
         <main className="flex-1 overflow-x-hidden">
-          <div className="max-w-7xl mx-auto px-6 py-10 md:py-16">
+          <div className="max-w-7xl mx-auto px-6 pt-6 pb-10 md:pt-8 md:pb-16">
             {children}
           </div>
         </main>

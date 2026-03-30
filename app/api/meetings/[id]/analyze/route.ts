@@ -46,17 +46,20 @@ export async function POST(
           role: "system",
           content: `You are an expert AI productivity assistant. 
           Your task is to analyze meeting transcripts in Vietnamese and extract valuable insights.
+          Also, you must perform "Smart Speaker Diarization": identify different speakers based on context, names mentioned, and speaking styles.
+          
           Respond strictly in JSON format with the following structure:
           {
-            "summary": "A concise, executive summary of the meeting (3-5 sentences), in Vietnamese.",
+            "summary": "A concise, executive summary (3-5 sentences), in Vietnamese.",
             "actionItems": [
-               { "text": "A clear task to be done (task description), in Vietnamese", "owner": "Name of the person responsible, or null" }
-            ]
+               { "text": "A task description, in Vietnamese", "owner": "Name or null" }
+            ],
+            "diarizedTranscript": "The full transcript rewritten with speaker labels like 'Speaker A: [text]', 'Speaker B: [text]' or names if identified (e.g., 'Đạt: [text]')."
           }`
         },
         {
           role: "user",
-          content: `Please analyze the following meeting transcript:\n\n${transcriptText}`
+          content: `Please analyze and diarize this transcript:\n\n${transcriptText}`
         }
       ],
       model: "llama-3.3-70b-versatile",
@@ -70,6 +73,7 @@ export async function POST(
       where: { id: id },
       data: {
         summary: analysisResult.summary,
+        transcript: analysisResult.diarizedTranscript ? { data: analysisResult.diarizedTranscript } : meeting.transcript,
         actionItems: {
           deleteMany: {}, // Clean existing items if any
           create: analysisResult.actionItems?.map((item: any) => ({

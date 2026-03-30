@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Mic, Calendar, Clock, Sparkles, TrendingUp, Lightbulb, UserCheck, ArrowUpRight, Plus, Users, PlayCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LoadingState } from "@/components/shared/loading-state";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -128,28 +129,26 @@ export default function MeetingsDashboard() {
               </div>
            </div>
 
-           <div className="space-y-3">
+           <div className="space-y-4">
               {isLoading ? (
-                <div className="p-12 text-center text-muted-foreground animate-pulse text-xs font-black uppercase tracking-widest bg-white/5 rounded-3xl border border-white/5">
-                   Synchronizing with Cloud Vault...
-                </div>
+                <LoadingState type="skeleton" className="py-12" />
               ) : meetings.length === 0 ? (
                 <div className="p-12 text-center text-muted-foreground text-xs font-black uppercase tracking-widest bg-white/5 rounded-3xl border border-white/5">
                    No sessions archived yet.
                 </div>
               ) : (
                 meetings.map((meeting, i) => (
-                  <Link key={meeting.id} href={`/meetings/${meeting.id}`}>
+                  <Link key={meeting.id} href={`/meetings/${meeting.id}`} className="block">
                     <motion.div 
                       key={meeting.id}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 + (i * 0.1) }}
                       className={cn(
-                        "p-6 rounded-3xl border transition-all duration-300 group cursor-pointer relative overflow-hidden",
+                        "p-6 rounded-[2rem] border transition-all duration-300 group cursor-pointer relative overflow-hidden",
                         meeting.status === 'Live' 
                             ? "glass-card border-primary/20 bg-primary/5 shadow-lg" 
-                            : "bg-white/5 border-transparent hover:border-white/10"
+                            : "bg-white/[0.03] border-white/10 hover:border-primary/40 hover:bg-white/[0.06] shadow-sm"
                       )}
                     >
                       <div className="flex justify-between items-center gap-4">
